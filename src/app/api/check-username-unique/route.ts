@@ -31,6 +31,33 @@ export async function GET(request: Request) {
         }
       );
     }
+    const { username } = result.data;
+
+    const existingVerfiedUser = await UserModel.findOne({
+      username,
+      isVerified: true,
+    });
+
+    if (existingVerfiedUser) {
+      return Response.json(
+        {
+          success: false,
+          message: "Username is already taken",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+    return Response.json(
+      {
+        success: true,
+        message: "Username is Unique",
+      },
+      {
+        status: 201,
+      }
+    );
   } catch (error) {
     console.log("error checking username", error);
     return Response.json(
