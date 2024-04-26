@@ -9,7 +9,6 @@ import {
   Text,
   Button,
 } from "@react-email/components";
-import { format } from "path";
 
 interface VerificationEmailProps {
   username: string;

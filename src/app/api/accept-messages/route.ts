@@ -104,7 +104,7 @@ export async function GET(request: Request) {
     }
     return Response.json(
       {
-        success: false,
+        success: true,
         isAcceptingMessages: foundUser.isAcceptingMessage,
       },
       {
@@ -112,15 +112,10 @@ export async function GET(request: Request) {
       }
     );
   } catch (error) {
-    console.log("failed to update user accept messages");
+    console.error("Error retrieving message acceptance status:", error);
     return Response.json(
-      {
-        success: false,
-        message: "Error in getting mesages acceptance status",
-      },
-      {
-        status: 500,
-      }
+      { success: false, message: "Error retrieving message acceptance status" },
+      { status: 500 }
     );
   }
 }

@@ -44,7 +44,7 @@ const Verify = () => {
       const axiosError = error as AxiosError<ApiResponse>;
       let errorMessage = axiosError.response?.data.message;
       toast({
-        title: "Signup failed",
+        title: "Verification failed",
         description: errorMessage,
         variant: "destructive",
       });
