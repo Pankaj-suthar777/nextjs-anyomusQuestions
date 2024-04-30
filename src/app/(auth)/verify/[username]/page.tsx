@@ -38,7 +38,7 @@ const Verify = () => {
         description: res.data.message,
       });
 
-      router.replace("sign-in");
+      router.replace("/sign-in");
     } catch (error) {
       console.error("Error in signup of user");
       const axiosError = error as AxiosError<ApiResponse>;

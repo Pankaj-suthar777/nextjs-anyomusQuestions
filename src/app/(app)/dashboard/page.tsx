@@ -1,6 +1,7 @@
 "use client";
 import MessageCard from "@/components/MessageCard";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/use-toast";
 import { Message } from "@/model/User";
 import { AcceptMessagehema } from "@/schemas/acceptMessageSchema";
@@ -9,7 +10,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Separator } from "@radix-ui/react-separator";
 import axios, { AxiosError } from "axios";
 import { Loader2, RefreshCcw } from "lucide-react";
-import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -39,7 +39,8 @@ const Dashboard = () => {
     setIsSwitchLoading(true);
     try {
       const response = await axios.get<ApiResponse>("/api/accept-messages");
-      setValue("acceptMessages", response.data.isAcceptingMessage);
+      console.log(response);
+      setValue("acceptMessages", response.data.isAcceptingMessages);
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast({
@@ -58,6 +59,7 @@ const Dashboard = () => {
       setIsSwitchLoading(false);
       try {
         const res = await axios.get<ApiResponse>("/api/get-messages");
+
         setMessage(res.data.messages || []);
         if (refresh) {
           toast({
@@ -83,7 +85,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (!session || !session.user) return;
     fetchAcceptMessage();
-    fetchMessages();
+    fetchMessages(true);
   }, [session, setValue, fetchAcceptMessage, fetchMessages]);
 
   const handleSwitchChange = async () => {
@@ -105,7 +107,11 @@ const Dashboard = () => {
     }
   };
 
-  const { username } = session?.user as User;
+  let username;
+  if (session?.user) {
+    username = session.user.username;
+  }
+  // const { username } = session?.user as User;
   const baseUrl = `${window.location.protocol}//${window.location.host}`;
 
   const profileUrl = `${baseUrl}/u/${username}`;
@@ -166,7 +172,7 @@ const Dashboard = () => {
         )}
       </Button>
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {messages.length > 0 ? (
+        {messages?.length > 0 ? (
           messages.map((message, index) => (
             <MessageCard
               key={message._id}
