@@ -51,7 +51,7 @@ const Dashboard = () => {
     } finally {
       setIsSwitchLoading(false);
     }
-  }, [setValue]);
+  }, [setValue, toast]);
 
   const fetchMessages = useCallback(
     async (refresh: boolean) => {
@@ -112,7 +112,14 @@ const Dashboard = () => {
     username = session.user.username;
   }
   // const { username } = session?.user as User;
-  const baseUrl = `${window.location.protocol}//${window.location.host}`;
+  let protocol;
+  let host;
+  if (typeof window !== "undefined") {
+    protocol = window.location.protocol;
+    host = window.location.host;
+  }
+
+  const baseUrl = `${protocol}//${host}`;
 
   const profileUrl = `${baseUrl}/u/${username}`;
 
